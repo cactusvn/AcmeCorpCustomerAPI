@@ -1,0 +1,55 @@
+name: dockercompose2378063104759061228
+services:
+  acmecorpcustomerapi:
+    build:
+      context: D:\POC\Interview\Final\AcmeCorpCustomerAPI
+      dockerfile: AcmeCorpCustomerAPI\Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ConnectionStrings__DefaultConnection: Data Source=sqldb,1433;Initial Catalog=CustomersDb;Integrated
+        Security=False;User ID=sa;Password=P(ssw0rd0123);Connect Timeout=60;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;
+    image: acmecorpcustomerapi
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+    - mode: ingress
+      target: 80
+      published: "8080"
+      protocol: tcp
+    - mode: ingress
+      target: 443
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\viet\AppData\Roaming/Microsoft/UserSecrets
+      target: C:\Users\ContainerUser\AppData\Roaming\Microsoft\UserSecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\viet\AppData\Roaming/ASP.NET/Https
+      target: C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https
+      read_only: true
+      bind:
+        create_host_path: true
+  sqldb:
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+      MSSQL_SA_PASSWORD: Pssw0rd0123
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    mem_limit: "2202009600"
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 1433
+      published: "1433"
+      protocol: tcp
+networks:
+  default:
+    name: dockercompose2378063104759061228_default

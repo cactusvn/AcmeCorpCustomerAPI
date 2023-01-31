@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  sqldb:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    mem_limit: 2100m
+    ports:
+     - "1433:1433"
+    environment:
+     - ACCEPT_EULA=Y
+     - MSSQL_SA_PASSWORD=Pssw0rd0123
+     - MSSQL_PID=Express
+   
+  acmecorpcustomerapi:
+    image: ${DOCKER_REGISTRY-}acmecorpcustomerapi
+    build:
+      context: .
+      dockerfile: AcmeCorpCustomerAPI\Dockerfile
+    environment:
+     - ConnectionStrings__DefaultConnection=Data Source=sqldb,1433;Initial Catalog=CustomersDb;Integrated Security=False;User ID=sa;Password=P(ssw0rd0123);Connect Timeout=60;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;
+
+    ports:
+     - "8080:80"

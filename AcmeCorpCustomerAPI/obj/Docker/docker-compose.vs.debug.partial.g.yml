@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  acmecorpcustomerapi:
+    image: acmecorpcustomerapi:dev
+    container_name: AcmeCorpCustomerAPI
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "AcmeCorpCustomerAPI"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - NUGET_PACKAGES=C:\.nuget\packages
+      - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
+      #- NUGET_FALLBACK_PACKAGES=$container_paths_to_fallback_packages_acmecorpcustomerapi$
+    volumes:
+      - D:\POC\Interview\Final\AcmeCorpCustomerAPI\AcmeCorpCustomerAPI:C:\app
+      - D:\POC\Interview\Final\AcmeCorpCustomerAPI:C:\src
+      - C:\Users\viet\onecoremsvsmon\17.2.10406.4:C:\remote_debugger:ro
+#$nuget_volume_mapping_acmecorpcustomerapi$
+      - ${APPDATA}/ASP.NET/Https:C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:C:\Users\ContainerUser\AppData\Roaming\Microsoft\UserSecrets:ro
+
+    entrypoint: C:\\remote_debugger\\x64\\msvsmon.exe /noauth /anyuser /silent /nostatus /noclrwarn /nosecuritywarn /nofirewallwarn /nowowwarn /timeout:2147483646 /LogDebuggeeOutputToStdOut
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "\"C:\\Program Files\\dotnet\\dotnet.exe\""
+      #com.microsoft.visualstudio.debuggee.arguments: " $debuggee_arguments_probing_paths_acmecorpcustomerapi$ \"C:\\app\\bin\\Debug\\net6.0\\AcmeCorpCustomerAPI.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "C:\\app"
+      com.microsoft.visualstudio.debuggee.killprogram: "C:\\remote_debugger\\x64\\utils\\KillProcess.exe dotnet.exe"
